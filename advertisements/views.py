@@ -1,15 +1,18 @@
+from django.db.models import Q
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import (BasePermission, IsAdminUser,
+                                        IsAuthenticated)
 from rest_framework.viewsets import ModelViewSet
+
+from advertisements.filters import AdvertisementFilter
 from advertisements.models import Advertisement, AdvertisementStatusChoices
 from advertisements.serializers import AdvertisementSerializer, UserSerializer
-from django_filters.rest_framework import DjangoFilterBackend
-from advertisements.filters import AdvertisementFilter
-from rest_framework import permissions
-from django.db.models import Q
 
-class AdvertisementPermissions(permissions.BasePermission):
+
+class AdvertisementPermissions(BasePermission):
     def has_permission(self, request, view):
         if view.action in ['create', 'update', 'partial_update', 'destroy']:
-            return permissions.IsAuthenticated()
+            return request.user.is_authenticated
         return super().has_permission(request, view)
     
     def has_object_permission(self, request, view, obj):
@@ -27,7 +30,7 @@ class AdvertisementViewSet(ModelViewSet):
     # filter_backends = [DjangoFilterBackend, AdvertisementFilter]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['status', 'created_at', 'creator']
-    permission_classes = [AdvertisementPermissions]
+    permission_classes = [AdvertisementPermissions | IsAdminUser]
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
