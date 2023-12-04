@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from advertisements.models import Advertisement, AdvertisementStatusChoices
 
-MAX_OPEN_ADV_CNT_PER_USER = 3
+MAX_OPEN_ADV_CNT_PER_USER = 10
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer для пользователя."""
