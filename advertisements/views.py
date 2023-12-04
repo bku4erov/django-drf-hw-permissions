@@ -23,13 +23,10 @@ class AdvertisementPermissions(BasePermission):
 class AdvertisementViewSet(ModelViewSet):
     """ViewSet для объявлений."""
 
-    # TODO: настройте ViewSet, укажите атрибуты для кверисета,
-    #   сериализаторов и фильтров
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-    # filter_backends = [DjangoFilterBackend, AdvertisementFilter]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['status', 'created_at', 'creator']
+    filter_backends = [DjangoFilterBackend,]
+    filterset_class = AdvertisementFilter
     permission_classes = [AdvertisementPermissions | IsAdminUser]
 
     def get_queryset(self):
